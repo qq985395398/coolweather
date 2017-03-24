@@ -74,7 +74,7 @@ public class CoolWeatherDB {
 	/*
 	 * 将City实例存储到数据库
 	 */
-	public void City(City city){
+	public void saveCity(City city){
 		if (city!=null) {
 			ContentValues values=new ContentValues();
 			values.put("city_name", city.getCityName());
@@ -125,7 +125,7 @@ public class CoolWeatherDB {
 	 */
 	public List<County> loadCounties(int cityId){
 		List<County> list=new ArrayList<County>();
-		Cursor cursor=db.query("County", null, "cityId=?", new String[]{String.valueOf(cityId)}, null, null, null);
+		Cursor cursor=db.query("County", null, "city_Id=?", new String[]{String.valueOf(cityId)}, null, null, null);
 		if(cursor.moveToFirst()){
 			do {
 				County county=new County();
