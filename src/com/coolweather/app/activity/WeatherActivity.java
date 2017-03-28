@@ -10,21 +10,32 @@ import com.coolweather.app.util.Utility;
 
 import android.app.Activity;
 import android.app.DownloadManager.Query;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.Window;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-public class WeatherActivity extends Activity{
+public class WeatherActivity extends Activity implements OnClickListener{
 	private LinearLayout weatherInfoLayout;
 	/*
 	 * 用于显示城市 名
 	 */
 	private TextView cityNameText;
+	/*
+	 * 切换城市按钮
+	 */
+	private Button switchCity;
+	/*
+	 * 更新天气按钮
+	 */
+	private Button refreshWeather;
 	/*
 	 * 用于显示发布时间
 	 */
@@ -68,6 +79,11 @@ public class WeatherActivity extends Activity{
 		}else {
 			showWeather();
 		}
+		switchCity=(Button)findViewById(R.id.switch_city);
+		refreshWeather=(Button)findViewById(R.id.refresh_weather);
+		switchCity.setOnClickListener(this);
+		refreshWeather.setOnClickListener(this);
+		
 	}
 	/*
 	 * 从SharedPreferences文件中读取存储的天气信息，并显示到界面上。
@@ -146,5 +162,27 @@ public class WeatherActivity extends Activity{
 				});
 			}
 		});
+	}
+	@Override
+	public void onClick(View v) {
+		// TODO Auto-generated method stub
+		switch (v.getId()) {
+		case R.id.switch_city:
+			Intent intent=new Intent(this,ChooseAreaActivity.class);
+			intent.putExtra("from_weather_activity", true);
+			startActivity(intent);
+			finish();
+			break;
+		case R.id.refresh_weather:
+			publichText.setText("同步中...");
+			SharedPreferences prefs=PreferenceManager.getDefaultSharedPreferences(this);
+			String weatherCode=prefs.getString("weather_code", "");
+			if (!TextUtils.isEmpty(weatherCode)) {
+				queryWeatherInfo(weatherCode);
+			}
+			break;
+		default:
+			break;
+		}
 	}
 }
